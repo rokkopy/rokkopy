@@ -8,8 +8,9 @@ profile: true
 
 メインの議事録はこちら: 
 
-- **Record**: http://rokkopy.github.io/qe-seminar/
-- **GitHub Repo**: https://github.com/rokkopy/qe-seminar
+- サイト: [http://rokkopy.github.io/qe-seminar/](http://rokkopy.github.io/qe-seminar/)
+- GitHub: [https://github.com/rokkopy/qe-seminar](https://github.com/rokkopy/qe-seminar)
+
 
 This is a blog of Rokko-dai Python study group (rokkopy). 
 Topics include Python, economics and git. 
