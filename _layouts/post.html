@@ -1,7 +1,6 @@
 ---
 layout: default
 comments: true
-archive: true
 ---
 
 <article class="post">
@@ -19,15 +18,18 @@ archive: true
             Post by
             {% if page.author.name %}
                 {% if page.author.github %}
-                    <a href="http://github.com/{{ page.author.github }}">{{ page.author.name }}</a>
+                    <a href="http://github.com/{{ page.author.github }}">
+                        {{ page.author.name }}
+                    </a>
                 {% else %}
                     {{ page.author.name }}
                 {% endif %}
+                , also the author of <a href="#modal">these posts ...</a>
             {% else %}
                 an anonymous author
             {% endif %}
         </span>
-            <span>{{ site.description }}</span>
+        <span>{{ site.description }}</span>
         </div>
     <section id="sharing">
         <div class="g-plusone" data-annotation="none"></div>
@@ -42,17 +44,20 @@ archive: true
     </div>
 {% endif %}
 
-<!-- Archive post list -->
-{% if page.archive %}
-    <ul id="post-list" class="archive readmore">
-        <h3>Read more</h3>
-        {% for post in site.posts %}
-            <li>
-                <a href="{{ post.url }}">{{ post.title }}<aside class="dates">{{ post.date | date:"%b %d" }}</aside></a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+
+    <div class="remodal" data-remodal-id="modal">
+        <button data-remodal-action="close" class="remodal-close"></button>
+        <ul id="post-list" class="archive readmore">
+            <h3>Posts by {{ page.author.name }} </h3>
+            {% for p in site.posts %}
+            {% if page.author.name == p.author.name %}
+                <li>
+                    <a href="{{ post.url }}">{{ p.title }}<aside class="dates">{{ p.date | date:"%b %d" }}</aside></a>
+                </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
 
 
 

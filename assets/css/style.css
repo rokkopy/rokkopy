@@ -376,6 +376,7 @@ Post List
 
 #post-list li,#archive-list li {
 	list-style-type: none;
+	text-align: left;
 }
 
 #post-list li:last-child {
@@ -616,10 +617,10 @@ h2.month {
 #wrapper ul { margin-bottom: 20px; }
 #wrapper li { line-height: 1.7; }
 
+
 /* Google+ */
 #___plusone_0 {
 	padding: 6px 10px;
 	width: 40px!important;
 	height: 12px!important;
 }
-#___comments_0, ___comments_0 iframe {height:200px !important;}
