@@ -370,8 +370,8 @@ img {
 /*=========================================
 Post List
 =========================================== */
-#post-list,#archive-list {
-	margin-top: 100px;
+#post-list,#archive-list,#comments {
+	margin-top: 50px;
 }
 
 #post-list li,#archive-list li {
@@ -475,21 +475,6 @@ Post List
 #sharing {
 	float: right;
 	margin: -2px;
-}
-
-#sharing a {
-	font-size: 20px;
-	font-size: 23px;
-	margin-left: 1px;
-	margin-top: 4px;
-	color: #d4d4d4;
-	display: inline-block;
-	vertical-align: middle;
-}
-
-#sharing a:hover {
-	/*color: #444;*/
-	opacity: 0.8;
 }
 
 /* Post Navigation */
@@ -605,22 +590,6 @@ h2.month {
 #post-list.archive.readmore .dates{
 	font: 300 16px/1.6 "Helvetica Neue",helvetica,Arial,sans-serif;
 }
-#sharing a.facebook {
-  background: #4361b3;
-}
-#sharing a.twitter {
-  background: #4fafed;
-}
-
-#sharing a {
-  font-size: 20px;
-  font-size: 13px;
-  font-weight: bold;
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 4px;
-  margin-left: 2px;
-}
 
 /* Media Queries */
 @media screen and (max-width: 540px) {
@@ -646,3 +615,11 @@ h2.month {
 /* Custom */
 #wrapper ul { margin-bottom: 20px; }
 #wrapper li { line-height: 1.7; }
+
+/* Google+ */
+#___plusone_0 {
+	padding: 6px 10px;
+	width: 40px!important;
+	height: 12px!important;
+}
+#___comments_0, ___comments_0 iframe {height:200px !important;}

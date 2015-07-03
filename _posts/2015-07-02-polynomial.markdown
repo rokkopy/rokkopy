@@ -2,12 +2,14 @@
 title:  "Polynomial class"
 date:   2015-07-02 15:00:00
 description: comments for qe-seminar
-post_author: kenjisato
+author:
+    name: Kenji Sato
+    github: kenjisato
 ---
 
 ### Excercise 2: Polynomialクラスと多項式の微分
 
-QE: [Excercise 2][qeex2] は多項式のクラス `Polynomial` を作る問題. 
+QE: [Excercise 2][qeex2] は多項式のクラス `Polynomial` を作る問題.
 次のような振る舞いをするように求められています.
 
 {% highlight python %}
@@ -24,13 +26,13 @@ QE: [Excercise 2][qeex2] は多項式のクラス `Polynomial` を作る問題.
   p(x) = a\_0 + a\_1 x + a\_2 x\^2 + \cdots + a\_N x\^N
 \\]
 
-について, 
+について,
 
-- 係数 \\( coefficients = [a\_0, \dots, a\_N] \\) を初期化とするクラスを作り, 
-- インスタンスが関数として振る舞うようにせよ, 
+- 係数 \\( coefficients = [a\_0, \dots, a\_N] \\) を初期化とするクラスを作り,
+- インスタンスが関数として振る舞うようにせよ,
 - そのクラスには微分を計算するメソッドを実装せよ
 
-というのが課題です. 
+というのが課題です.
 
 [こちら][qesol2] に掲載されている解答を再掲しておきます (コメントは省略しました):
 
@@ -43,43 +45,43 @@ class Polynomial(object):
     def __call__(self, x):
         y = 0
         for i, a in enumerate(self.coefficients):
-            y += a * x**i  
+            y += a * x**i
         return y
 
     def differentiate(self):
         new_coefficients = []
         for i, a in enumerate(self.coefficients):
             new_coefficients.append(i * a)
-        del new_coefficients[0]  
+        del new_coefficients[0]
         self.coefficients = new_coefficients
 {% endhighlight %}
 
-ここでの微分の定義は, もともとの多項式インスタンスを壊してしまうので, 
+ここでの微分の定義は, もともとの多項式インスタンスを壊してしまうので,
 ときによっては使いづらいと感じることもあるでしょう. (言語によっては「破壊的メソッド」と
-言って特段の注意を払うのですが, Python ではそのようなことはありません) 
+言って特段の注意を払うのですが, Python ではそのようなことはありません)
 
-以下で, 元のインスタンスを「破壊」しないメソッド定義で置き換えておきましょう. 
-その前に1点, 足し算について注意しておきます. 
+以下で, 元のインスタンスを「破壊」しないメソッド定義で置き換えておきましょう.
+その前に1点, 足し算について注意しておきます.
 
 #### 浮動小数点数の足し算に関する注意
 
 Quantative Economics の最初の章は Python の入門的なトピックを総ざらいすることが
 目的なので, いくつか大切なトピックが省略されています. ここでは, 足し算に関する注意点を
-挙げておきます. 
+挙げておきます.
 
 
-上記の `__call__()` メソッドの内容は, 次のようなものです. 
+上記の `__call__()` メソッドの内容は, 次のようなものです.
 
 {% highlight python %}
 y = 0
 for i, a in enumerate(coefficients):
-    y += a * x**i  
+    y += a * x**i
 {% endhighlight %}
 
-ひょっとするとこれは特段面白みのない当たり前に正しいコードだと思うかもしれませんが, 
-落とし穴がないわけではありません. 
+ひょっとするとこれは特段面白みのない当たり前に正しいコードだと思うかもしれませんが,
+落とし穴がないわけではありません.
 
-次の振る舞いを手元のインタプリタで確認してみてください. 
+次の振る舞いを手元のインタプリタで確認してみてください.
 
 {% highlight python %}
 >>> total = 0.0
@@ -90,7 +92,7 @@ for i, a in enumerate(coefficients):
 0.9999999999999999
 {% endhighlight %}
 
-`sum()` 組み込み関数を使っても同様です. 
+`sum()` 組み込み関数を使っても同様です.
 
 {% highlight python %}
 >>> sum(0.1 for _ in range(10))
@@ -100,13 +102,13 @@ for i, a in enumerate(coefficients):
 浮動小数点数 (float) が正確に表現できる数は
 
 \\[
-    n / 2^m, \quad n, m \in \mathbb{N} 
+    n / 2^m, \quad n, m \in \mathbb{N}
 \\]
 
-の形の数だけです. それ以外の数はこの数表現で近似されます. 
+の形の数だけです. それ以外の数はこの数表現で近似されます.
 
 
-標準ライブラリの `math` モジュールに含まれる `math.fsum` はこの問題をうまく回避してくれます. 
+標準ライブラリの `math` モジュールに含まれる `math.fsum` はこの問題をうまく回避してくれます.
 
 {% highlight python %}
 >>> import math
@@ -114,9 +116,9 @@ for i, a in enumerate(coefficients):
 1.0
 {% endhighlight %}
 
-浮動小数点数の足し算をするときは `math.fsum` を使うことを検討してみてください. 
-複素数の足し算ができない `math.fsum` を使えないケースも多々あると思いますので, 
-状況に応じて適切な関数を使用してください.  
+浮動小数点数の足し算をするときは `math.fsum` を使うことを検討してみてください.
+複素数の足し算ができない `math.fsum` を使えないケースも多々あると思いますので,
+状況に応じて適切な関数を使用してください.
 
 ### (異なる条件のもとでの) 別解
 
@@ -134,16 +136,16 @@ class Poly(object):
         self.coef = coef
 
     def __call__(self, x):
-        return fsum(a * x**i for i, a 
+        return fsum(a * x**i for i, a
                     in enumerate(self.coef))
 
     def differentiate(self):
-        new_coef = [i * a for i, a 
+        new_coef = [i * a for i, a
                     in enumerate(self.coef[1:], 1)]
         return Poly(new_coef)
 {% endhighlight %}
 
-使用例は次の通りです. 
+使用例は次の通りです.
 
 {% highlight python %}
 >>> p = Poly([1.0, 2.0, -3.0])

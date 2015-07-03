@@ -1,6 +1,6 @@
 ---
 layout: default
-disqus: false
+comments: true
 archive: true
 ---
 
@@ -12,26 +12,33 @@ archive: true
     <section id="post-body">
         {{content}}
     </section>
-</article>
 <footer id="post-meta" class="clearfix">
-    <a href="http://twitter.com/{{ site.authorTwitter }}">
-        <!-- <img class="avatar" src="/assets/images/avatar.png"> -->
+
         <div>
-            <span class="dark">{{ site.author }}</span>
+        <span class="dark">
+            Post by
+            {% if page.author.name %}
+                {% if page.author.github %}
+                    <a href="http://github.com/{{ page.author.github }}">{{ page.author.name }}</a>
+                {% else %}
+                    {{ page.author.name }}
+                {% endif %}
+            {% else %}
+                an anonymous author
+            {% endif %}
+        </span>
             <span>{{ site.description }}</span>
         </div>
-    </a>
-
     <section id="sharing">
-        {% include share.html %}
+        <div class="g-plusone" data-annotation="none"></div>
     </section>
 </footer>
 
-<!-- Disqus comments -->
-{% if page.disqus %}
-    <div class="archive readmore">
+<!-- Google+ comments -->
+{% if page.comments %}
+    <div id="comments" class="archive readmore">
         <h3>Comments</h3>
-        {% include disqus.html %}
+        {% include comments.html %}
     </div>
 {% endif %}
 
@@ -46,6 +53,7 @@ archive: true
         {% endfor %}
     </ul>
 {% endif %}
+
 
 
 

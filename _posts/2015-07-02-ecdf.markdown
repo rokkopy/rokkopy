@@ -2,18 +2,20 @@
 title:  "ECDF and __call__ method"
 date:   2015-07-02 15:00:00
 description: comments for qe-seminar
-post_author: kenjisato
+author:
+   name: Kenji Sato
+   github: kenjisato
 ---
 
-本日は, [Quantative Economics/Object Oriented Programming - Excercise][qeex] 
+本日は, [Quantative Economics/Object Oriented Programming - Excercise][qeex]
 が最初テーマ. 初級者にはやや難しいトピックも含まれているので備忘録として記録しておきます.
 
 ### Excercise 1: `__call__` メソッドについて
 
-[Excercise 1][qeex1] はサンプルデータから累積分布関数を構築するクラス `ECDF` を作る問題. 
-ただし, `__call__` メソッドを使って作るというのが条件. 
+[Excercise 1][qeex1] はサンプルデータから累積分布関数を構築するクラス `ECDF` を作る問題.
+ただし, `__call__` メソッドを使って作るというのが条件.
 
-具体的な例として, 下のような使い方ができるようにとのこと. 
+具体的な例として, 下のような使い方ができるようにとのこと.
 
 {% highlight python %}
 >>> from random import uniform
@@ -44,13 +46,13 @@ class ECDF(object):
 
 クラスに `__call__` メソッドを追加するとインスタンスを関数として扱うことができるようになる
 というのがポイントで, `F(0.5)` という書き方が許されるのも `F` が関数 (callable) と同じ
-ように振る舞うように作られているからです. 
+ように振る舞うように作られているからです.
 
 この練習問題では「`observations` をパラメータとして累積分布関数を定義するクラス」を
-作っています. `F` が 1つの累積分布関数で, クラスはこのプロセスをモデル化しています. 
-数学的な表現を使えば **パラメトライズされた関数族** を作った訳です. 
+作っています. `F` が 1つの累積分布関数で, クラスはこのプロセスをモデル化しています.
+数学的な表現を使えば **パラメトライズされた関数族** を作った訳です.
 
-ちなみに, 途中でパラメータを変更できるという機能を犠牲にすれば, 関数定義だけで同じことができます.  
+ちなみに, 途中でパラメータを変更できるという機能を犠牲にすれば, 関数定義だけで同じことができます.
 
 {% highlight python %}
 def ecdf(observations):
@@ -60,7 +62,7 @@ def ecdf(observations):
     return _ecdf
 {% endhighlight %}
 
-使用例は次のような感じになります. 
+使用例は次のような感じになります.
 
 {% highlight python %}
 >>> samples = [uniform(0, 1) for _ in range(10)]
