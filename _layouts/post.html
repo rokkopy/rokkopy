@@ -16,15 +16,16 @@ comments: true
         <div>
         <span class="dark">
             Post by
-            {% if page.author.name %}
-                {% if page.author.github %}
-                    <a href="http://github.com/{{ page.author.github }}">
-                        {{ page.author.name }}
-                    </a>
+            {% if page.author %}
+                {% if site.data.authors.[page.author].link == "github" %}
+                    <a href="http://github.com/{{ site.data.authors.[page.author].github }}" >
+                {% elsif site.data.authors.[page.author].link == "gplus" %}
+                    <a href="https://plus.google.com/+{{ site.data.authors.[page.author].gplus }}?rel=author">
                 {% else %}
-                    {{ page.author.name }}
+                    <a href="{{ site.data.authors.[page.author].link }}#">
                 {% endif %}
-                , also the author of <a href="#modal">these posts ...</a>
+                    {{ site.data.authors.[page.author].name }}
+                </a>, also the author of <a href="#modal">these posts ...</a>
             {% else %}
                 an anonymous author
             {% endif %}
@@ -44,13 +45,12 @@ comments: true
     </div>
 {% endif %}
 
-
     <div class="remodal" data-remodal-id="modal">
         <button data-remodal-action="close" class="remodal-close"></button>
         <ul id="post-list" class="archive readmore">
-            <h3>Posts by {{ page.author.name }} </h3>
+            <h3>Posts by {{ site.data.authors.[page.author].name }} </h3>
             {% for p in site.posts %}
-            {% if page.author.name == p.author.name %}
+            {% if page.author == p.author %}
                 <li>
                     <a href="{{ post.url }}">{{ p.title }}<aside class="dates">{{ p.date | date:"%b %d" }}</aside></a>
                 </li>

@@ -1,0 +1,37 @@
+## authors.yml
+##
+## Format
+## -------------
+##
+## short_name:
+##     name: Full Name
+##     github: github_account or "github-account" 
+##     gplus: Google+ ID   # To notify google that a post is your authoring
+##     link: github or gplus or http://your.web.site
+##
+
+Akira55:
+    name: Akira Matsui
+    github: Akira55
+
+teruyoshi5:
+    name: Teru Kobayashi
+    github: teruyoshi5
+
+KHasui:
+    name: Kohei Hasui
+    github: KHasui
+
+KKumashiro:
+    name: Kumashiro 
+    github: "K-KUMASHIRO"
+
+ryonhun:
+    name: Ryonhun
+    github: ryonhun
+
+kenjisato:
+    name: Kenji Sato
+    github: kenjisato
+    gplus: KenjiSato1983
+    link: gplus

@@ -2,9 +2,7 @@
 title:  "Polynomial class"
 date:   2015-07-02 15:00:00
 description: comments for qe-seminar
-author:
-    name: Kenji Sato
-    github: kenjisato
+author: kenjisato
 ---
 
 ### Excercise 2: Polynomialクラスと多項式の微分

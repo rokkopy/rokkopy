@@ -2,9 +2,7 @@
 title:  "ECDF and __call__ method"
 date:   2015-07-02 15:00:00
 description: comments for qe-seminar
-author:
-   name: Kenji Sato
-   github: kenjisato
+author: kenjisato
 ---
 
 本日は, [Quantative Economics/Object Oriented Programming - Excercise][qeex]
