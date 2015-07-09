@@ -1,0 +1,272 @@
+---
+title:  "Iterator, iterable and generator"
+date:   2015-07-10 13:00:00
+description: comments for qe-seminar
+author: kenjisato
+---
+
+
+オブジェクト指向のデザインパターンにIterator パターンというものがあります. 
+Iterator は 「**何かがたくさん集まっているときに, それを順番に指し示していき, 
+全体をスキャンしていく処理**」(結城浩『Java言語で学ぶデザインパターン入門』 p. 2) 
+を担うものです. Python では Iterator を簡単に作ることができます. 
+
+自分で作る前に, Iterator を構成するパーツと標準ライブラリで何が可能かを確認してみましょう. 
+
+## iter(), next(), StopIteration
+
+一番簡単な例はリストです. 値の列
+
+\\[
+    a\_0, a\_1, a\_2, a\_3, \dots, a_N
+\\]
+
+を順番に走査することは, Iterator を使うまでもなく簡単なことです. 
+
+```python
+>>> a = [0, 1, 2, 3, 4, 5, 6]
+>>> for i in range(len(a)):
+...     do_something(a[i])
+...
+```
+
+
+しかし, 普通は次のように書きます. 
+
+```python
+>>> a = [0, 1, 2, 3, 4, 5, 6]
+>>> for ai in a:
+...     do_something(ai)
+...
+```
+
+この表現は, Iterator を意識させないような書き方になっていますが,  
+実際には次のコードと同等のことをやっています. 
+
+```python
+>>> a = [0, 1, 2, 3, 4, 5, 6]  # (1)
+>>> a_it = iter(a)  # (2)
+>>> while True:
+...     try:
+...         do_something(next(a_it))  # (3)
+...     except StopIteration:  # (4)
+...         break
+...
+>>> del a_it  # (5)
+```
+
+
+1. `a` というリストオブジェクトを作ります. これは, Iterable です (Iterator を作ることができる)
+2. `iter()` 関数に Iterable を渡すと, Iterator オブジェクトを作ります. 
+   `a_it` に対して走査を行います. 
+3. `next()` 関数は, Iterator の次の要素を取り出すための関数です.
+4. `StopIteration` 例外が出るとループを停止します.
+5. 不要になった `a_it` を削除します
+
+Iterator を構成する要素は次の3つです.
+
+
+### iter()
+
+`iter()` 組み込み関数は, Iterable オブジェクトから Iterator を作るときに使います. 
+`iter(iterable)` は, `iterable.__iter__()` を呼び出します. Iterator 
+を初期化する関数だと考えてよいでしょう
+
+
+### next()
+
+`next()` 組み込み関数は, Iterator オブジェクトの次の要素を取り出すときに使います. 
+`next(iterator)` は, Python3 では `iterator.__next__()` を呼び出します.
+Python2 では, `iterator.next()` を呼び出します.
+
+
+### StopIteration
+
+`StopIteration` 例外は, `next()` 関数によって取得する次の要素が存在しない場合に送出されます.
+Iterator の終了を意味します. 
+
+## リスト以外の Iterable 
+
+文字列, 辞書, 集合, `frozenset` はすべて Iterable です. 
+Python には Iterable を返す関数・メソッドが多数あります. 次は一例です.
+
+|  Python 3                 |  Python 2                 | 
+|:--------------------------|:--------------------------|
+| `open()`                  | `open()`                  |
+| `enumerate(iterable)`     | `enumerate(iterable)`     |
+| `range()`                 | `xrange()`                |
+| `dict.items()`            | `dict.iteritems()`        |
+| `dict.keys()`             | `dict.iterkeys()`         |
+| `dict.values()`           | `dict.itervalues()`       |
+| `zip(iterable, iterable)` |                           |
+
+
+Python 2 の `zip(iterable, iterable)` はリストを返します. 
+Python 3 では多くの関数が Iterable を返すように変更されました. 
+
+### itertools
+
+[`itertools` モジュール](https://docs.python.org/3/library/itertools.html)
+にはイテレータに関する関数がたくさん定義されています. 
+ドキュメントを読んでおくとよいでしょう. 
+
+```python
+>>> import itertools
+>>> on_off = itertools.cycle('01')
+>>> it = iter(on_off)
+>>> [next(it) for _ in range(10)]
+['0', '1', '0', '1', '0', '1', '0', '1', '0', '1']
+```
+
+
+## Iterable-Iterator を作る
+
+離散時間力学系の軌道
+
+\\[
+    x\_0, f(x\_0), f^2(x\_0), f^3(x\_0), \dots
+\\]
+
+を計算するための Iterable-Iterator を作ってみます. 
+以下は, 少し冗長な書き方ですが, 
+
+- Iterable は `iter()` によって Iterator を返す
+- Iterator は `next()` によって次の要素を返し, 要素が尽きたら `StopIteration` を送出する
+
+ということを意識しながら読んでみてください. 
+
+
+
+```python
+class DSIterable:
+    def __init__(self, f, x, t):
+        self.f = f
+        self.x = x
+        self.t = t
+    def __iter__(self):
+        return DSIterator(self.f, self.x, self.t)
+
+class DSIterator:
+    def __init__(self, f, x, t):
+        self.f = f
+        self.x = x
+        self.t = t
+        self.cnt = 0
+    def __next__(self):  # define next() for Python 2
+        if self.cnt < self.t:
+            self.cnt += 1
+            x, self.x = self.x, self.f(self.x)
+            return x
+        else:
+            raise StopIteration
+```
+
+次のように使います. 
+
+
+```python
+>>> def f(x):
+...     return 4.0 * x * (1.0 - x)
+...
+>>> logistic = DSIterable(f, 0.2, 10)
+>>> path = [x for x in logistic]
+>>> path
+[0.2,
+ 0.6400000000000001,
+ 0.9215999999999999,
+ 0.28901376000000045,
+ 0.8219392261226504,
+ 0.585420538734196,
+ 0.970813326249439,
+ 0.11333924730375745,
+ 0.40197384929750063,
+ 0.9615634951138035]
+
+```
+
+
+## Generator
+
+ジェネレータという方法を使えば, 上のような冗長な書き方をする必要はありません. 
+
+
+### 基本構文
+
+`return` 文の代わりに `yield` 文を使います. 
+ジェネレータ関数の戻り値を引数にして `next()` を呼び出すと `yield` 文を探して, 値を送出します.  
+もう一度, `next()` を呼び出すと次の `yield` 文を探して値を送出します. 
+これが関数定義の最後に到達するまで繰り返され, 最後に到達すると `StopIteration` が発生します. 
+
+つまり, ジェネレータ関数の戻り値は Iterator となっています.
+
+```python
+>>> def simple_generator():
+...     yield 0  # 1回目の next() で出力
+...     yield 1  # 2回目の next() で出力
+...     yield 2  # 3回目の next() で出力
+...
+>>> g = simple_generator()
+>>> next(g), next(g), next(g)
+(0, 1, 2)
+>>> next(g)   # StopIteration raised
+```
+
+通常, ジェネレータはループと一緒に使われます. 
+
+### フィボナッチジェネレータ
+
+\\(N\\) より小さいフィボナッチ数
+
+\\[
+    a\_0 = 1,\ a\_1 = 1,\ a\_{n} = a\_{n-1} + a\_{n-2}, \quad n=2,3,\dots
+\\]
+
+を順番に返すジェネレータを定義してみます.
+なぜ以下のような定義でうまくいくか考えてみてください. 
+
+```python
+def fibonacci(N):
+    a, b = 0, 1
+    while b < N:
+        yield b
+        a, b = b, a + b
+```
+
+次のように使います.
+
+
+```python
+>>> fib = fibonacci(25)
+>>> [_ for _ in fib]
+[1, 1, 2, 3, 5, 8, 13, 21]
+```
+
+## DSIterable 改良版
+
+最後に, `DSIterable` をジェネレータを使って書き換えてみます.
+
+`__iter__()` は Iterator を返すようなメソッドでした. ジェネレータ関数はまさにそのような関数なので, 
+`__iter__()` の定義にジェネレータの構文を使えばよいわけです.
+
+```python
+class DS:
+    def __init__(self, f, x, t):
+        self.f = f
+        self.x = x
+        self.t = t
+    def __iter__(self):
+        x, cnt = self.x, 0
+        while cnt < self.t:
+            yield x
+            cnt += 1
+            x = self.f(x)
+```
+
+かなり短くすることができました. 次のように使います. 
+
+```python
+>>> d = DS(lambda x: 4.0*x*(1-x), 0.2, 10)
+>>> list(d)
+[0.2, 0.6400000000000001, 0.9215999999999999, 0.28901376000000045, 0.8219392261226504, 0.585420538734196, 0.970813326249439, 0.11333924730375745, 0.40197384929750063, 0.9615634951138035]
+```
+
