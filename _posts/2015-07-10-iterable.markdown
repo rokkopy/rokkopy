@@ -6,6 +6,7 @@ author: kenjisato
 ---
 
 - **7/10 一部修正**
+- **8/12 一部修正**
 
 ---
 
@@ -167,6 +168,7 @@ class DSIterable:
         self.f = f
         self.x = x
         self.t = t
+
     def __iter__(self):
         return DSIterator(self.f, self.x, self.t)
 
@@ -176,6 +178,10 @@ class DSIterator:
         self.x = x
         self.t = t
         self.cnt = 0
+
+    def __iter__(self):
+        return self
+
     def __next__(self):  # define next() for Python 2
         if self.cnt < self.t:
             self.cnt += 1
