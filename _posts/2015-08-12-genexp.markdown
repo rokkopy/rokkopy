@@ -1,0 +1,150 @@
+---
+title:  "listcomp and genexp"
+#date:   2015-08-12 13:00:00
+description: comments for qe-seminar
+author: kenjisato
+---
+
+
+## リスト内包表記 (list comprehension)
+
+リスト内包表記というのは, 次のような構文です.
+
+```python
+>>> [x**2 for x in range(-2, 3)]
+[4, 1, 0, 1, 4]
+```
+
+リスト内包表記の目的は, Iterable/Iterator を走査しつつ,
+各要素に対して簡単な操作を行なった上で **新しいリストを作る** ことです.
+出力されたリストに関心がない場合はリスト内包表記を使うべきではありません.
+
+したがって, 次の例の1つ目のリスト内包表記はよいですが, 2つ目の書き方は避けるべきです.
+
+```python
+>>> L = [[] for _ in range(5)]  # OK
+>>> [elm.append(0) for elm in L]  # DON'T DO THIS
+[None, None, None, None, None]  ## 出力されたリストは捨てる
+>>> L
+[[0], [0], [0], [0], [0]]  ## L をこのように更新したかった
+```
+
+あるいは次のような書き方も避けるべきです. 普通に `for` ループを使いましょう.
+
+```python
+>>> [print(elm) for elm in L]  # DON'T DO THIS
+a
+b
+c
+d
+e
+[None, None, None, None, None]
+```
+
+注意点ばかりを言っても面白くないので, 典型的な例をいくつか挙げておきます.
+
+
+### Iterable の各要素に簡単な操作を施し結果をリストとして出力する
+
+```python
+>>> L = list('abcde')
+>>> L
+['a', 'b', 'c', 'd', 'e']
+>>> [elm.upper() for elm in L]
+['A', 'B', 'C', 'D', 'E']
+```
+
+
+```python
+>>> number = '291909098090'
+>>> [int(d) for d in number]
+[2, 9, 1, 9, 0, 9, 0, 9, 8, 0, 9, 0]
+```
+
+```python
+>>> [(a, b) for a in 'xy'
+...         for b in '01']
+[('x', '0'), ('x', '1'), ('y', '0'), ('y', '1')]
+```
+
+
+### リストの各要素を評価し, 条件にあうものを抜き出す
+
+
+```python
+>>> import random
+>>> random.seed(1)
+>>> r = [random.randrange(10) for _ in range(5)]
+>>> r
+[2, 9, 1, 4, 1]
+>>> [x for x in r if x < 3]
+[2, 1, 1]
+```
+
+```python
+>>> r = [random.randrange(-5, 5) for _ in range(5)]
+>>> [x for x in r if x >= 0]
+[2, 1, 1, 4]
+>>> [-x for x in r if x < 0]
+[5]
+```
+
+
+
+## ジェネレータ式 (generator expression)
+
+リスト内包表記と類似した表現で簡単にジェネレータを作ることができます.
+まずは, 例を通してジェネレータの復習をしておきましょう.
+
+数字からなる文字列, 例えば数字からなる文字列
+
+```python
+>>> num = '1356374680023'
+```
+
+の各桁を走査するジェネレータを作るには次のように丸括弧を用います.
+
+```python
+>>> g = (int(d) for d in num)
+>>> next(g)
+1
+>>> next(g)
+3
+>>> next(g)
+5
+>>> next(g)
+6
+```
+
+この文字列の各桁に含まれる数字の和を知りたいとしましょう.
+組み込みの `sum()` 関数はパラメータにイテラブルを取ります.
+リスト内包表記を使って
+
+```python
+>>> sum([int(d) for d in num])
+```
+
+としてもよいですが, 必ずしもリストを生成する必要はありません.
+ジェネレータを引数にすればよく
+
+```python
+>>> sum((int(d) for d in num))
+```
+
+とすることもできます.
+
+実は, ジェネレータ式が唯一の引数である場合には内側の丸括弧を省略することができて,
+
+```python
+>>> sum(int(d) for d in num)
+```
+
+と書いても同じことです. ジェネレータ式が唯一の引数でない場合には丸括弧を省略できません.
+
+```python
+>>> zip([0, 1], (d for d in '01'))
+[(0, '0'), (1, '1')]
+>>> zip([0, 1], d for d in '01')
+  File "<stdin>", line 1
+SyntaxError: Generator expression must be parenthesized if not sole argument
+```
